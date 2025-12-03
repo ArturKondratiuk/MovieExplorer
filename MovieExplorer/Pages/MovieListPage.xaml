@@ -1,12 +1,18 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MovieExplorer.Pages.MovieListPage"
-             Title="MovieListPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="MovieExplorer.Pages.MovieListPage"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+    <!-- grid for future -->
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, *"
+      Padding="8">
+
+        <!-- searching bar -->
+        <SearchBar x:Name="SearchBarControl"
+                   Grid.Row="0"
+                   Placeholder="Search by title"
+                   TextChanged="OnSearchChanged"/>
+    </Grid>
+
 </ContentPage>

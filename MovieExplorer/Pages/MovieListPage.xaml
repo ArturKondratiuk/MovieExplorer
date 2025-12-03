@@ -4,15 +4,95 @@
     x:Class="MovieExplorer.Pages.MovieListPage"
     BackgroundColor="{DynamicResource PageBackgroundColor}">
 
-    <!-- grid for future -->
+    <!-- local resources -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <!-- light/dark layout -->
+            <Color x:Key="SecondaryColor">#FFFFFF</Color>
+            <Color x:Key="SecondaryColorDark">#1E1E1E</Color>
+
+            <!-- light/dark text -->
+            <Color x:Key="PrimaryTextColor">#000000</Color>
+            <Color x:Key="PrimaryTextColorDark">#FFFFFF</Color>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <!-- grid -->
     <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, *"
-      Padding="8">
+          Padding="8">
 
         <!-- searching bar -->
         <SearchBar x:Name="SearchBarControl"
                    Grid.Row="0"
                    Placeholder="Search by title"
                    TextChanged="OnSearchChanged"/>
+
+        <!-- list of movies -->
+        <CollectionView
+            x:Name="MovieListView"
+            Grid.Row="5"
+            SelectionMode="None"
+            ItemsLayout="VerticalList">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+
+                    <Frame Margin="4"
+                           Padding="8"
+                           HasShadow="False"
+                           CornerRadius="8"
+                           BackgroundColor="{DynamicResource SecondaryColor}">
+
+                        <Grid ColumnDefinitions="50, *">
+
+                            <!-- emoji -->
+                            <Label Text="{Binding Emoji}"
+                                   FontSize="30"
+                                   TextColor="{DynamicResource PrimaryTextColor}"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnMovieTap"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+
+                            <!-- movie info -->
+                            <VerticalStackLayout Grid.Column="1"
+                                                 Spacing="2">
+
+                                <Label Text="{Binding Title}"
+                                       FontAttributes="Bold"
+                                       FontSize="16"
+                                       TextColor="{DynamicResource PrimaryTextColor}">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnMovieTap"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+
+                                <Label Text="{Binding YearText}"
+                                       FontSize="12"
+                                       TextColor="{DynamicResource PrimaryTextColor}"/>
+
+                                <Label Text="{Binding GenreString}"
+                                       FontSize="12"
+                                       TextColor="{DynamicResource PrimaryTextColor}"/>
+
+                                <Label Text="{Binding RatingDisplay}"
+                                       FontSize="12"
+                                       TextColor="{DynamicResource PrimaryTextColor}"/>
+
+                            </VerticalStackLayout>
+                        </Grid>
+
+                    </Frame>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
     </Grid>
 
 </ContentPage>

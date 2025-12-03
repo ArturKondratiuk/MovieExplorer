@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MovieExplorer.Pages.MovieDetailsPage"
-             Title="MovieDetailsPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Movie Details Page"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="MovieExplorer.Pages.MovieDetailsPage"
+    Padding="20">
+
+    <VerticalStackLayout Spacing="12">
+
+        <!-- emoji -->
+        <Label x:Name="EmojiLabel"
+               FontSize="60"
+               HorizontalOptions="Center"/>
+
+        <!-- title -->
+        <Label x:Name="TitleLabel"
+               FontSize="28"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"/>
+
+        <!-- info -->
+        <Label x:Name="YearLabel"   FontSize="20"/>
+        <Label x:Name="GenreLabel"  FontSize="18"/>
+        <Label x:Name="RatingLabel" FontSize="18"/>
     </VerticalStackLayout>
+
 </ContentPage>

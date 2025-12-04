@@ -29,6 +29,25 @@
                    Placeholder="Search by title"
                    TextChanged="OnSearchChanged"/>
 
+        <!-- sort and filter buttons -->
+        <ScrollView Grid.Row="1"
+            Orientation="Horizontal"
+            HorizontalScrollBarVisibility="Always"
+            Padding="4">
+            <HorizontalStackLayout Spacing="8">
+                <Button x:Name="YearSortButton"
+                Text="Year ↑"
+                WidthRequest="110"
+                Clicked="OnSortByYear"/>
+
+                <Button x:Name="RatingSortButton"
+                Text="Rating ↑"
+                WidthRequest="110"
+                Clicked="OnSortByRating"/>
+
+            </HorizontalStackLayout>
+        </ScrollView>
+
         <!-- list of movies -->
         <CollectionView
             x:Name="MovieListView"

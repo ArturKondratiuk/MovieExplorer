@@ -1,4 +1,4 @@
-using MovieExplorer.Models;
+﻿using MovieExplorer.Models;
 using System.Collections.ObjectModel;
 
 namespace MovieExplorer.Pages;
@@ -8,6 +8,11 @@ public partial class MovieListPage {
 
     //displayed list bound to CollectionView
     private readonly ObservableCollection<DisplayMovie> shownMovies = new();
+
+    //sorting: 0 = none, 1 = asc, -1 = desc
+    int yearSort = 0;
+    int ratingSort = 0;
+    string lastSortPressed = "";
 
     public MovieListPage() {
         InitializeComponent();
@@ -24,7 +29,6 @@ public partial class MovieListPage {
         public double Rating => Original.Rating;
         public string RatingDisplay => $"IMDB: {Rating:0.0}";
         public string Emoji => Original.Emoji;
-
     }
 
     //load movies
@@ -67,8 +71,110 @@ public partial class MovieListPage {
             text = "";
 
         text = text.Trim().ToLower();
+
+        ApplyFiltersAndSort(text);
     }
 
+    //sorting buttons
+    private void OnSortByYear(object sender, EventArgs e) {
+        if (yearSort == 1)
+            yearSort = -1;
+        else
+            yearSort = 1;
+
+        if (yearSort == 1)
+            YearSortButton.Text = "Year ↑";
+        else
+            YearSortButton.Text = "Year ↓";
+
+        lastSortPressed = "Year";
+
+        UpdateSortButtonVisuals();
+        ApplyFiltersAndSort(SearchBarControl.Text);
+    }
+
+    private void OnSortByRating(object sender, EventArgs e) {
+        if (ratingSort == 1)
+            ratingSort = -1;
+        else
+            ratingSort = 1;
+
+        if (ratingSort == 1)
+            RatingSortButton.Text = "Rating ↑";
+        else
+            RatingSortButton.Text = "Rating ↓";
+
+        lastSortPressed = "Rating";
+
+        UpdateSortButtonVisuals();
+        ApplyFiltersAndSort(SearchBarControl.Text);
+    }
+
+    //button colors (looks good)
+    private void UpdateSortButtonVisuals() {
+        if (yearSort != 0)
+            YearSortButton.BackgroundColor = Colors.Orange;
+        else
+            YearSortButton.BackgroundColor = Colors.Gray;
+
+        if (ratingSort != 0)
+            RatingSortButton.BackgroundColor = Colors.Orange;
+        else
+            RatingSortButton.BackgroundColor = Colors.Gray;
+    }
+
+    //apply filters and sort
+    private void ApplyFiltersAndSort(string search) {
+        //start with empty list
+        List<Movie> result = new List<Movie>();
+
+        //check every movie if it passes all filters
+        foreach (var m in allMovies) {
+            bool ok = true;
+            //if search is not empty title must contain the search text
+            if (!string.IsNullOrWhiteSpace(search)) {
+                if (!m.Title.ToLower().Contains(search))
+                    ok = false;
+            }
+
+            //only add movies that passed all checks (for future use)
+            if (ok)
+                result.Add(m);
+        }
+
+        //sorting
+        if (lastSortPressed == "Year" && yearSort != 0) {
+            // ascending
+            if (yearSort == 1)
+                result = result.OrderBy(m => m.Year).ToList();
+            // descending
+            else
+                result = result.OrderByDescending(m => m.Year).ToList();
+        }
+
+        else if (lastSortPressed == "Rating" && ratingSort != 0) {
+            if (ratingSort == 1)
+                result = result.OrderBy(m => m.Rating).ToList();
+            else
+                result = result.OrderByDescending(m => m.Rating).ToList();
+        }
+        //refresh ui
+        UpdateShownMovies(result);
+    }
+
+    //update the CollectionView (mostly for future use too)
+    private void UpdateShownMovies(IEnumerable<Movie> movies) {
+        //clear old items
+        shownMovies.Clear();
+
+        //add each movie one by one
+        foreach (Movie movie in movies) {
+            DisplayMovie item = ToDisplayMovie(movie);
+            shownMovies.Add(item);
+        }
+    }
+
+    //to movie details if clicked on title/emoji
     private async void OnMovieTap(object sender, EventArgs e) {
         //get the label that was tapped
         Label tappedLabel = sender as Label;

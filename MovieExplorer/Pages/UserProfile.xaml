@@ -1,12 +1,16 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MovieExplorer.Pages.UserProfile"
              Title="UserProfile">
     <VerticalStackLayout>
-        <Label 
-            Text="User Profile"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        
+        <!-- helloworld -->
+       <Label x:Name="WelcomeLabel"
+       Text=""
+       FontSize="28"
+       FontAttributes="Bold"
+       HorizontalOptions="Center"
+       Margin="0,0,0,10"/>
+        
     </VerticalStackLayout>
 </ContentPage>

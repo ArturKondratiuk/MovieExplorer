@@ -1,16 +1,69 @@
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MovieExplorer.Pages.UserProfile"
-             Title="UserProfile">
-    <VerticalStackLayout>
-        
-        <!-- helloworld -->
-       <Label x:Name="WelcomeLabel"
-       Text=""
-       FontSize="28"
-       FontAttributes="Bold"
-       HorizontalOptions="Center"
-       Margin="0,0,0,10"/>
-        
-    </VerticalStackLayout>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="MovieExplorer.Pages.UserProfile"
+    Padding="20">
+
+    <!-- added because the standard MAUI scroll bar overlapped the buttons, so I had to visually move everything to the right -->
+    <ScrollView Padding="0,0,14,0">
+        <VerticalStackLayout Spacing="18">
+
+            <!-- helloworld -->
+            <Label x:Name="WelcomeLabel"
+                   Text=""
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,10"/>
+
+            <!-- logout button -->
+            <Button Text="Logout"
+                    BackgroundColor="#E74C3C"
+                    TextColor="White"
+                    FontSize="14"
+                    Padding="10,5"
+                    CornerRadius="12"
+                    HorizontalOptions="Center"
+                    WidthRequest="120"
+                    Clicked="OnLogout"
+                    Margin="0,0,0,20"/>
+
+            <!-- favs title -->
+            <Label Text="Favourite Movies"
+                   FontSize="20"
+                   FontAttributes="Bold"/>
+
+            <!-- empty favs note -->
+            <Label x:Name="EmptyLabel"
+                   Text="You didn't add favourite movies yet"
+                   TextColor="Gray"
+                   IsVisible="False"/>
+
+            <!-- favs -->
+            <CollectionView x:Name="FavListView">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="50,*,Auto" Padding="5">
+
+                            <Label Text="{Binding Emoji}" FontSize="30"/>
+
+                            <Label Grid.Column="1"
+                                   Text="{Binding Title}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"/>
+
+                            <Button Grid.Column="2"
+                                    Text="Remove"
+                                    BindingContext="{Binding .}"
+                                    BackgroundColor="#FF9900"
+                                    TextColor="Black"
+                                    Padding="6,2"
+                                    CornerRadius="8"
+                                    Clicked="OnRemoveFavourite"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

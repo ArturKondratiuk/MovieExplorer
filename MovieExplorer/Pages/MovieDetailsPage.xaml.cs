@@ -15,7 +15,23 @@ namespace MovieExplorer.Pages {
             EmojiLabel.Text = movie.Emoji;
             RatingLabel.Text = $"IMDB: {movie.Rating:0.0}";
 
+            //write "viewed" in history when page is opened in UserProfilePage.xaml.cs
+            RecordViewed();
+
             UpdateFavButton();
+        }
+
+        //method for "viewed" in history
+        private async void RecordViewed() {
+            await HistoryStore.AddAsync(new HistoryEntry
+            {
+                Title = movie.Title,
+                Year = movie.Year,
+                Genre = movie.Genre,
+                Emoji = movie.Emoji,
+                Action = "viewed",
+                Timestamp = DateTime.Now
+            });
         }
 
         //updates favourite button text
@@ -37,9 +53,26 @@ namespace MovieExplorer.Pages {
                 FavButton.Text = "Add to favourites";
         }
 
-        //toggle favourite
+        //toggle favourite and write its history
         private async void OnToggleFavourite(object sender, EventArgs e) {
             bool added = await FavouriteStore.ToggleAsync(movie);
+
+            var entry = new HistoryEntry();
+            entry.Title = movie.Title;
+            entry.Year = movie.Year;
+            entry.Genre = movie.Genre;
+            entry.Emoji = movie.Emoji;
+
+            if (added == true) {
+                entry.Action = "favourited";
+            }
+            else {
+                entry.Action = "unfavourited"; 
+            }
+
+            entry.Timestamp = DateTime.Now;
+
+            await HistoryStore.AddAsync(entry);
 
             //update ui
             UpdateFavButton();

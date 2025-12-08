@@ -14,6 +14,10 @@ public partial class MovieListPage {
     int ratingSort = 0;
     string lastSortPressed = "";
 
+    //filters
+    private readonly List<string> selectedGenres = new();
+    private readonly List<string> selectedDirectors = new();
+
     public MovieListPage() {
         InitializeComponent();
         LoadMovies();
@@ -48,6 +52,8 @@ public partial class MovieListPage {
 
         MovieListView.ItemsSource = shownMovies;
 
+        CreateGenreCheckboxesFromData();
+        CreateDirectorCheckboxesFromData();
     }
 
     //display movies
@@ -123,9 +129,145 @@ public partial class MovieListPage {
             RatingSortButton.BackgroundColor = Colors.Gray;
     }
 
+    //genre panel
+    private void OnToggleGenrePanel(object sender, EventArgs e) {
+        GenrePanel.IsVisible = !GenrePanel.IsVisible;
+    }
+
+    private void CreateGenreCheckboxesFromData() {
+        //clear panel
+        GenreCheckboxContainer.Children.Clear();
+
+        //genres without repeats
+        List<string> genres = new List<string>();
+
+        //collecting all genres
+        foreach (var movie in allMovies) {
+            if (movie.Genre == null)
+                continue;
+
+            foreach (var genre in movie.Genre) {
+                if (!genres.Contains(genre))
+                    genres.Add(genre);
+            }
+        }
+
+        //sort list
+        genres.Sort();
+
+        //elements for each genre
+        foreach (var g in genres) {
+            var row = CreateCheckboxRow(g, OnGenreChecked);
+            GenreCheckboxContainer.Children.Add(row);
+        }
+    }
+
+    //genre checkboxes
+    private void OnGenreChecked(object sender, CheckedChangedEventArgs e) {
+        CheckBox cb = sender as CheckBox;
+        if (cb == null)
+            return;
+
+        //genre with attached checkbox
+        string genre = cb.BindingContext as string;
+        if (genre == null)
+            return;
+
+        //if user tip add genre to filter
+        if (e.Value == true) {
+            if (!selectedGenres.Contains(genre))
+                selectedGenres.Add(genre);
+        }
+
+        else {
+            //else remove from filter
+            selectedGenres.Remove(genre);
+        }
+        //update film list
+        ApplyFiltersAndSort(SearchBarControl.Text);
+    }
+
+    //director panel
+    private void OnToggleDirectorPanel(object sender, EventArgs e) {
+        DirectorPanel.IsVisible = !DirectorPanel.IsVisible;
+    }
+
+    private void CreateDirectorCheckboxesFromData() {
+        //clear panel before creating new elements
+        DirectorCheckboxContainer.Children.Clear();
+
+        //collect all directors
+        List<string> directors = new List<string>();
+
+        //sorting all films
+        foreach (var movie in allMovies) {
+            //skip if director empty
+            if (string.IsNullOrWhiteSpace(movie.Director))
+                continue;
+
+            //add if no director
+            if (!directors.Contains(movie.Director))
+                directors.Add(movie.Director);
+        }
+
+        //sort directors by alphabet
+        directors.Sort();
+
+        //line with checknox for every director
+        foreach (var director in directors) {
+            var row = CreateCheckboxRow(director, OnDirectorChecked);
+            DirectorCheckboxContainer.Children.Add(row);
+        }
+    }
+
+    private void OnDirectorChecked(object sender, CheckedChangedEventArgs e) {
+        //get checkbox
+        CheckBox box = sender as CheckBox;
+
+        //get name of director which stored in bindning context
+        string director = box.BindingContext as string;
+
+        //if tip add director to list
+        if (e.Value) {
+            if (!selectedDirectors.Contains(director))
+                selectedDirectors.Add(director);
+        }
+
+        //if not delete from list
+        else {
+            selectedDirectors.Remove(director);
+        }
+        //update list
+        ApplyFiltersAndSort(SearchBarControl.Text);
+    }
+
+    //checkboxes
+    private View CreateCheckboxRow(string text, EventHandler<CheckedChangedEventArgs> onChecked) {
+        //create checkbox
+        CheckBox checkBox = new CheckBox();
+        checkBox.BindingContext = text;      //connect the meaning (genre/director)
+        checkBox.CheckedChanged += onChecked; //subscribe to the event
+
+        //label
+        Label label = new Label();
+        label.Text = text;
+        label.VerticalTextAlignment = TextAlignment.Center;
+
+        //container
+        HorizontalStackLayout row = new HorizontalStackLayout();
+        row.Spacing = 6;
+        row.Padding = new Thickness(6, 0);
+
+        //chekbox with text
+        row.Children.Add(checkBox);
+        row.Children.Add(label);
+
+        return row;
+    }
+
     //apply filters and sort
     private void ApplyFiltersAndSort(string search) {
-        //start with empty list
+        //start with empy list
         List<Movie> result = new List<Movie>();
 
         //check every movie if it passes all filters
@@ -137,7 +279,31 @@ public partial class MovieListPage {
                     ok = false;
             }
 
-            //only add movies that passed all checks (for future use)
+            //genre filter
+            if (selectedGenres.Count > 0) {
+                //movie must have at least one genre matching selectedGenres
+                bool foundGenre = false;
+
+                if (m.Genre != null) {
+                    foreach (var g in m.Genre) {
+                        if (selectedGenres.Contains(g)) {
+                            foundGenre = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!foundGenre)
+                    ok = false;
+            }
+
+            //director filter
+            if (selectedDirectors.Count > 0) {
+                if (!selectedDirectors.Contains(m.Director))
+                    ok = false;
+            }
+
+            //only add movies that passed all checks
             if (ok)
                 result.Add(m);
         }
@@ -162,7 +328,7 @@ public partial class MovieListPage {
         UpdateShownMovies(result);
     }
 
-    //update the CollectionView (mostly for future use too)
+    //update the CollectionView
     private void UpdateShownMovies(IEnumerable<Movie> movies) {
         //clear old items
         shownMovies.Clear();
@@ -190,3 +356,7 @@ public partial class MovieListPage {
         await Navigation.PushAsync(new MovieDetailsPage(item.Original));
     }
 }
+
+//more time and effort was put into this page than in the entirety of last year.
+//special thanks to my mom and dad for raising me to be a great person.
+//at the end of the project I will tell them that they can be proud of me.

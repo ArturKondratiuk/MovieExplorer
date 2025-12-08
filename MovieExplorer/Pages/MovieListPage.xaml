@@ -45,7 +45,43 @@
                 WidthRequest="110"
                 Clicked="OnSortByRating"/>
 
+                <Button x:Name="GenreFilterButton"
+                Text="Genres"
+                WidthRequest="110"
+                Clicked="OnToggleGenrePanel"/>
+
+                <Button x:Name="DirectorFilterButton"
+                Text="Directors"
+                WidthRequest="110"
+                Clicked="OnToggleDirectorPanel"/>
             </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- genre panel -->
+        <ScrollView
+            Grid.Row="2"
+            x:Name="GenrePanel"
+            Orientation="Horizontal"
+            IsVisible="False"
+            HeightRequest="72"
+            BackgroundColor="{DynamicResource PageBackgroundColor}">
+            <HorizontalStackLayout x:Name="GenreCheckboxContainer"
+                                   Spacing="12"
+                                   VerticalOptions="Center"/>
+        </ScrollView>
+
+
+        <!-- director panel -->
+        <ScrollView
+            Grid.Row="3"
+            x:Name="DirectorPanel"
+            Orientation="Horizontal"
+            IsVisible="False"
+            HeightRequest="72"
+            BackgroundColor="{DynamicResource PageBackgroundColor}">
+            <HorizontalStackLayout x:Name="DirectorCheckboxContainer"
+                                   Spacing="12"
+                                   VerticalOptions="Center"/>
         </ScrollView>
 
         <!-- list of movies -->

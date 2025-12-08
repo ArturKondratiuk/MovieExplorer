@@ -15,7 +15,7 @@ namespace MovieExplorer.Pages {
             EmojiLabel.Text = movie.Emoji;
             RatingLabel.Text = $"IMDB: {movie.Rating:0.0}";
 
-            //write "viewed" in history when page is opened in UserProfilePage.xaml.cs
+            //write "viewed" in history when page is opened in UserProfile.xaml.cs
             RecordViewed();
 
             UpdateFavButton();

@@ -13,5 +13,19 @@
             <Switch x:Name="ThemeSwitch" Toggled="OnThemeToggled"/>
         </HorizontalStackLayout>
 
+        <!-- clear history button -->
+        <Button
+        Text="Clear history"
+        Clicked="OnClearHistory"
+        FontSize="12"
+        Padding="6,4"
+        CornerRadius="12"
+        BackgroundColor="#FF3B30"
+        TextColor="White"
+        HorizontalOptions="Start"
+        WidthRequest="130"
+        HeightRequest="32">
+        </Button>
+
     </VerticalStackLayout>
 </ContentPage>

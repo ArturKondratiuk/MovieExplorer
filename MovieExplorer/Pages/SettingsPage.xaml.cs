@@ -1,3 +1,5 @@
+using MovieExplorer.Models;
+
 namespace MovieExplorer.Pages;
 
 public partial class SettingsPage {
@@ -6,7 +8,8 @@ public partial class SettingsPage {
         public static bool DarkThemeEnabled { get; set; }
     }
 
-    public SettingsPage() {
+    public SettingsPage()
+    {
         InitializeComponent();
 
         //sync ui with saved settings
@@ -25,5 +28,26 @@ public partial class SettingsPage {
         else {
             Application.Current.UserAppTheme = AppTheme.Light;
         }
+    }
+
+    //clear history
+    private async void OnClearHistory(object sender, EventArgs e) {
+        bool confirm = await DisplayAlert(
+            "Confirm",
+            "Clear viewing history?",
+            "Yes",
+            "No"
+        );
+
+        if (!confirm)
+            return;
+
+        await HistoryStore.ClearAsync();
+
+        await DisplayAlert(
+            "Done",
+            "Viewing history cleared.",
+            "OK"
+        );
     }
 }
